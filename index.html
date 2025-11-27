@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行動代號：生字特訓 (SPY x FAMILY)</title>
+    <style>
+        /* --- SPY x FAMILY 主題樣式 --- */
+        :root {
+            --spy-green: #005f40; /* 洛伊德西裝的綠色調 */
+            --spy-gold: #c4a747;  /* 伊甸學園制服的金色 */
+            --spy-dark: #222831;  /* 暗夜行動色 */
+            --spy-light: #f2f2f2; /* 文件紙張色 */
+            --bg-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23005f40' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, '微軟正黑體', sans-serif;
+            background-color: var(--spy-light);
+            background-image: var(--bg-pattern);
+            color: var(--spy-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border: 2px solid var(--spy-green);
+            border-top: 8px solid var(--spy-green);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 750px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--spy-green);
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--spy-gold);
+            display: inline-block;
+            padding-bottom: 10px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 問題區域 */
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            background-color: #e8f0e8;
+            padding: 15px 20px;
+            border-left: 5px solid var(--spy-green);
+            border-radius: 4px;
+        }
+
+        /* 圖片區域 */
+        .image-container {
+            text-align: center;
+            margin-bottom: 25px;
+            border: 2px solid var(--spy-dark);
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #ddd;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .quiz-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 選項按鈕 */
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid var(--spy-green);
+            color: var(--spy-green);
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background-color: var(--spy-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,95,64,0.2);
+        }
+
+        .option-btn.correct {
+            background-color: var(--spy-green) !important;
+            color: white !important;
+            border-color: var(--spy-green) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: #c0392b !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        /* 回饋與提示 */
+        .feedback, .hint-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+            color: #721c24;
+        }
+
+        .hint-box {
+            background-color: #e2e3e5;
+            border-left: 5px solid var(--spy-dark);
+            color: #383d41;
+            font-style: italic;
+        }
+
+        /* 控制按鈕 */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hint-btn, .next-btn, .restart-btn {
+            padding: 10px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.2s;
+        }
+
+        .hint-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        .hint-btn:hover { background-color: #5a6268; }
+        
+        .next-btn {
+            background-color: var(--spy-gold);
+            color: var(--spy-dark);
+            display: none;
+        }
+        .next-btn:hover { background-color: #b3983f; }
+
+        /* 進度條 */
+        .progress-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #e9ecef;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--spy-gold);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* 結果頁面 */
+        .results-container {
+            text-align: center;
+            display: none;
+            padding: 40px 20px;
+        }
+        .score-title {
+            font-size: 1.5rem;
+            color: var(--spy-dark);
+            margin-bottom: 10px;
+        }
+        .score-text {
+            font-size: 3.5rem;
+            color: var(--spy-green);
+            font-weight: 800;
+            margin: 20px 0;
+        }
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .restart-btn {
+            background-color: var(--spy-green);
+            color: white;
+            font-size: 1.1rem;
+        }
+        .restart-btn:hover { background-color: #004d33; }
+        
+        /* 機密印章裝飾 */
+        .top-secret-stamp {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            color: rgba(192, 57, 43, 0.15);
+            font-size: 5rem;
+            font-weight: bold;
+            transform: rotate(15deg);
+            pointer-events: none;
+            border: 4px solid rgba(192, 57, 43, 0.15);
+            padding: 5px 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="top-secret-stamp">TOP SECRET</div>
+        <h1>行動代號：生字特訓</h1>
+
+        <div id="quiz-content">
+            <div class="question-section">
+                <div class="question-text" id="question-text">任務載入中...</div>
+                <div class="image-container">
+                    <img src="" alt="Mission Image" class="quiz-image" id="quiz-image">
+                </div>
+            </div>
+
+            <div class="options-container" id="options-container">
+                </div>
+
+            <div class="feedback" id="feedback"></div>
+            <div class="hint-box" id="hint-box">情報提示: <span id="hint-text"></span></div>
+
+            <div class="controls">
+                <button class="hint-btn" id="hint-btn" onclick="toggleHint()">🔍 獲取情報</button>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一個任務 ➡️</button>
+            </div>
+        </div>
+
+        <div class="results-container" id="results-content">
+            <h2>任務報告</h2>
+            <p class="score-title">最終評分：</p>
+            <div class="score-text" id="final-score">0 / 14</div>
+            <p class="result-message" id="result-message"></p>
+            <button class="restart-btn" onclick="restartQuiz()">重啟任務</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- JavaScript 邏輯控制 ---
+
+        // 1. 題庫資料 (已設定為您要求的檔名格式 1.jpg - 14.jpg)
+        // 註：為了配合單選題形式，部分題目選取了關鍵字作為選項。
+        const quizData = [
+            {
+                question: "1. 面對敵人嚴密的警備，洛伊德耐心等待著防守露出空（　）的瞬間。",
+                imageUrl: "1.jpg",
+                answerOptions: [
+                    { text: "隙", rationale: "「空隙」指中間空出的地方，引申為漏洞或機會。", isCorrect: true },
+                    { text: "細", rationale: "「空細」不是一個詞語。", isCorrect: false }
+                ],
+                hint: "指縫隙、漏洞，發音與「細」相同。"
+            },
+            {
+                question: "2. 「睡美人」潛入了犯罪集團的巢（　），嚇得壞人們像老鼠一樣四處逃（　）。",
+                imageUrl: "2.jpg",
+                answerOptions: [
+                    { text: "窟 / 竄", rationale: "「巢窟」指壞人聚居的地方；「逃竄」指倉皇逃跑。", isCorrect: true },
+                    { text: "窩 / 跑", rationale: "「巢窩」較口語；「逃跑」語氣不如「逃竄」強烈倉皇。", isCorrect: false }
+                ],
+                hint: "第一個字指洞穴，第二個字形容像老鼠一樣亂跑。"
+            },
+            {
+                question: "3. 管理官嚴肅地提醒「黃昏」，「行動代號：梟」的主要宗（　）在於維護東西兩國的和平。",
+                imageUrl: "3.jpg",
+                answerOptions: [
+                    { text: "旨", rationale: "「宗旨」指主要的意圖或目的。", isCorrect: true },
+                    { text: "指", rationale: "「宗指」不是一個詞語。", isCorrect: false }
+                ],
+                hint: "意旨、目的。"
+            },
+            {
+                question: "4. 這次的跟監對象非常（　）（　），設下了許多圈套試圖擺脫洛伊德的追蹤。",
+                imageUrl: "4.jpg",
+                answerOptions: [
+                    { text: "狡猾", rationale: "形容人詭計多端，不可信任。", isCorrect: true },
+                    { text: "聰明", rationale: "「聰明」是中性詞，這裡需要貶義詞來形容敵人的詭計。", isCorrect: false }
+                ],
+                hint: "形容像狐狸一樣詭計多端。"
+            },
+            {
+                question: "5. 在情報戰中，「黃昏」必須具備在極短時間內分（　）資訊真偽的能力。",
+                imageUrl: "5.jpg",
+                answerOptions: [
+                    { text: "辨", rationale: "「分辨」指區別、辨識。", isCorrect: true },
+                    { text: "辯", rationale: "「分辯」是用言語解釋、辯解的意思，不符語境。", isCorrect: false }
+                ],
+                hint: "區別、判斷，中間是一點一撇。"
+            },
+            {
+                question: "6. 為了保護家人，洛伊德即使在家中也保持高度警（　），隨時覺（　）環境中的細微異狀。",
+                imageUrl: "6.jpg",
+                answerOptions: [
+                    { text: "惕 / 察", rationale: "「警惕」指對可能發生的危險保持戒備；「覺察」指發覺、看出來。", isCorrect: true },
+                    { text: "剔 / 查", rationale: "「警剔」錯字；「覺查」錯字。", isCorrect: false }
+                ],
+                hint: "第一個字是豎心旁，指戒備；第二個字指發覺。"
+            },
+            {
+                question: "7. 遭遇突如其來的槍戰時，洛伊德以迅雷不及掩耳的速度找到了掩（　）物。",
+                imageUrl: "7.jpg",
+                answerOptions: [
+                    { text: "蔽", rationale: "「掩蔽」指遮掩、擋住。", isCorrect: true },
+                    { text: "避", rationale: "「掩避」錯字，應為「躲避」。", isCorrect: false }
+                ],
+                hint: "遮擋、隱藏，草字頭。"
+            },
+            {
+                question: "8. 結束了各自繁忙的「工作」，佛傑一家回到溫暖的公（　），享受（　）閒的晚餐時光。",
+                imageUrl: "8.jpg",
+                answerOptions: [
+                    { text: "寓 / 悠", rationale: "「公寓」指多層樓的住宅；「悠閒」指閒適自得。", isCorrect: true },
+                    { text: "宇 / 優", rationale: "「公宇」指公共建築；「優閒」雖通，但「悠閒」更常見。", isCorrect: false }
+                ],
+                hint: "第一個字指住所；第二個字形容閒適的樣子。"
+            },
+            {
+                question: "9. 雖然這個家庭是建立在欺（　）與（　）言之上，但他們之間的羈絆卻越來越真實。",
+                imageUrl: "9.jpg",
+                answerOptions: [
+                    { text: "騙 / 謊", rationale: "「欺騙」與「謊言」意思相近，都指不真實的話語或行為。", isCorrect: true },
+                    { text: "偏 / 荒", rationale: "「欺偏」錯字；「荒言」指荒唐的話，語氣不同。", isCorrect: false }
+                ],
+                hint: "都與說假話有關。"
+            },
+            {
+                question: "10. 為了通過伊甸學園的審查，洛伊德不得不製造許多虛（　）的身分證明文件。",
+                imageUrl: "10.jpg",
+                answerOptions: [
+                    { text: "偽", rationale: "「虛偽」指不真實、造假的。", isCorrect: true },
+                    { text: "為", rationale: "「虛為」不是一個詞語。", isCorrect: false }
+                ],
+                hint: "假的、不真實的，人字旁。"
+            },
+            {
+                question: "11. 為了展現「優雅」，安妮亞用略顯浮（　）的語氣讚美伊甸學園的校園環境。",
+                imageUrl: "11.jpg",
+                answerOptions: [
+                    { text: "誇", rationale: "「浮誇」指虛浮不實，誇張過度。", isCorrect: true },
+                    { text: "跨", rationale: "「浮跨」不是一個詞語。", isCorrect: false }
+                ],
+                hint: "誇張、不切實際，言字旁。"
+            },
+            {
+                question: "12. 達米安少爺為了掩飾害羞，總是故意用（　）刺的語氣和安妮亞說話。",
+                imageUrl: "12.jpg",
+                answerOptions: [
+                    { text: "諷", rationale: "「諷刺」指用含蓄或誇張的話來譏刺別人。", isCorrect: true },
+                    { text: "風", rationale: "「風刺」錯字。", isCorrect: false }
+                ],
+                hint: "用言語譏刺別人，言字旁。"
+            },
+            {
+                question: "13. 同時兼顧多重身分與任務，讓鐵人般的洛伊德也感到體力透支、身體（　）弱。",
+                imageUrl: "13.jpg",
+                answerOptions: [
+                    { text: "虛", rationale: "「虛弱」指身體衰弱，沒有力氣。", isCorrect: true },
+                    { text: "需", rationale: "「需弱」不是一個詞語。", isCorrect: false }
+                ],
+                hint: "身體衰弱無力。"
+            },
+            {
+                question: "14. 洛伊德努力解釋「（　）蚌相爭」的成語故事，但安妮亞腦中只想著烤海鮮。",
+                imageUrl: "14.jpg",
+                answerOptions: [
+                    { text: "鷸", rationale: "「鷸蚌相爭」是成語，鷸是一種水鳥。", isCorrect: true },
+                    { text: " 鷂", rationale: "「鷂」是另一種猛禽，不符合此成語典故。", isCorrect: false }
+                ],
+                hint: "一種長嘴巴的水鳥，鳥字旁。"
+            }
+        ];
+
+        // 2. 變數設定
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isQuestionAnswered = false;
+
+        // 3. DOM 元素
+        const questionTextEl = document.getElementById('question-text');
+        const quizImageEl = document.getElementById('quiz-image');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const hintBoxEl = document.getElementById('hint-box');
+        const hintTextEl = document.getElementById('hint-text');
+        const nextBtnEl = document.getElementById('next-btn');
+        const hintBtnEl = document.getElementById('hint-btn');
+        const quizContentEl = document.getElementById('quiz-content');
+        const resultsContentEl = document.getElementById('results-content');
+        const finalScoreEl = document.getElementById('final-score');
+        const resultMessageEl = document.getElementById('result-message');
+        const progressBarEl = document.getElementById('progress-bar');
+
+        // 4. 初始化測驗
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizContentEl.style.display = 'block';
+            resultsContentEl.style.display = 'none';
+            loadQuestion();
+        }
+
+        // 5. 載入題目
+        function loadQuestion() {
+            isQuestionAnswered = false;
+            const currentQuizData = quizData[currentQuestionIndex];
+
+            // 更新 UI
+            questionTextEl.innerText = currentQuizData.question;
+            quizImageEl.src = currentQuizData.imageUrl;
+            
+            quizImageEl.onerror = function() {
+                this.alt = "⚠️ 影像資料遺失。請確認圖片檔案 (1.jpg - 14.jpg) 是否與網頁在同一目錄下。";
+                this.style.backgroundColor = "#f8d7da";
+                this.style.padding = "20px";
+                this.style.color = "#721c24";
+                this.style.fontWeight = "bold";
+            };
+
+            hintTextEl.innerText = currentQuizData.hint;
+            feedbackEl.style.display = 'none';
+            feedbackEl.className = 'feedback';
+            hintBoxEl.style.display = 'none';
+            nextBtnEl.style.display = 'none';
+            hintBtnEl.disabled = false;
+
+            // 更新進度條
+            const progressPercentage = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBarEl.style.width = `${progressPercentage}%`;
+
+            // 清空並重新產生選項按鈕
+            optionsContainerEl.innerHTML = '';
+            currentQuizData.answerOptions.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.innerText = option.text;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => selectOption(index));
+                optionsContainerEl.appendChild(button);
+            });
+        }
+
+        // 6. 選擇答案處理
+        function selectOption(selectedIndex) {
+            if (isQuestionAnswered) return;
+
+            isQuestionAnswered = true;
+            const currentQuizData = quizData[currentQuestionIndex];
+            const selectedOption = currentQuizData.answerOptions[selectedIndex];
+            const optionButtons = optionsContainerEl.querySelectorAll('.option-btn');
+
+            optionButtons.forEach(btn => btn.disabled = true);
+            hintBtnEl.disabled = true;
+            hintBoxEl.style.display = 'none';
+
+            if (selectedOption.isCorrect) {
+                score++;
+                optionButtons[selectedIndex].classList.add('correct');
+                feedbackEl.innerHTML = "<strong>✅ 任務成功！</strong> " + selectedOption.rationale;
+                feedbackEl.classList.add('correct');
+            } else {
+                optionButtons[selectedIndex].classList.add('incorrect');
+                const correctIndex = currentQuizData.answerOptions.findIndex(opt => opt.isCorrect);
+                optionButtons[correctIndex].classList.add('correct');
+                
+                feedbackEl.innerHTML = "<strong>❌ 任務失敗。</strong> " + selectedOption.rationale;
+                feedbackEl.classList.add('incorrect');
+            }
+            
+            feedbackEl.style.display = 'block';
+            nextBtnEl.style.display = 'block';
+        }
+
+        // 7. 顯示提示
+        function toggleHint() {
+            if (hintBoxEl.style.display === 'block') {
+                hintBoxEl.style.display = 'none';
+            } else {
+                hintBoxEl.style.display = 'block';
+            }
+        }
+
+        // 8. 下一題
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // 9. 顯示結果
+        function showResults() {
+            quizContentEl.style.display = 'none';
+            resultsContentEl.style.display = 'block';
+            progressBarEl.style.width = '100%';
+
+            finalScoreEl.innerText = `${score} / ${quizData.length}`;
+
+            let message = "";
+            if (score === quizData.length) {
+                message = "太完美了！代號「學霸」，你的任務執行率是 100%！🌟🌟🌟";
+            } else if (score >= quizData.length * 0.8) {
+                message = "優秀的表現！只差一點點就能成為頂尖間諜了，繼續加油！✨";
+            } else if (score >= quizData.length * 0.6) {
+                message = "任務勉強完成。還需要更多訓練才能跟上佛傑一家的腳步喔！💪";
+            } else {
+                message = "任務失敗...看來你需要像安妮亞一樣多讀點書了。再挑戰一次吧！📚";
+            }
+            resultMessageEl.innerText = message;
+        }
+
+        // 10. 重新開始
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        // --- 啟動 ---
+        initQuiz();
+
+    </script>
+</body>
+</html>
