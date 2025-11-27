@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>行動代號：生字特訓 (SPY x FAMILY)</title>
+    <title>行動代號：生字特訓 (SPY x FAMILY) - 進階版</title>
     <style>
-        /* --- SPY x FAMILY 主題樣式 --- */
+        /* --- SPY x FAMILY 主題樣式 (維持不變) --- */
         :root {
-            --spy-green: #005f40; /* 洛伊德西裝的綠色調 */
-            --spy-gold: #c4a747;  /* 伊甸學園制服的金色 */
-            --spy-dark: #222831;  /* 暗夜行動色 */
-            --spy-light: #f2f2f2; /* 文件紙張色 */
+            --spy-green: #005f40;
+            --spy-gold: #c4a747;
+            --spy-dark: #222831;
+            --spy-light: #f2f2f2;
             --bg-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23005f40' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
@@ -55,7 +55,6 @@
             transform: translateX(-50%);
         }
 
-        /* 問題區域 */
         .question-text {
             font-size: 1.3rem;
             font-weight: bold;
@@ -67,7 +66,6 @@
             border-radius: 4px;
         }
 
-        /* 圖片區域 */
         .image-container {
             text-align: center;
             margin-bottom: 25px;
@@ -88,10 +86,10 @@
             display: block;
         }
 
-        /* 選項按鈕 */
+        /* 修改為適合4個選項的 Grid 佈局 */
         .options-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr; /* 兩列 */
             gap: 15px;
         }
 
@@ -100,12 +98,16 @@
             border: 2px solid var(--spy-green);
             color: var(--spy-green);
             border-radius: 4px;
-            padding: 12px 20px;
-            font-size: 1.2rem;
+            padding: 12px 10px; /* 稍微減少內距以容納更多文字 */
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
             text-align: center;
+            display: flex; /* 讓文字垂直置中 */
+            justify-content: center;
+            align-items: center;
+            min-height: 60px; /* 設定最小高度讓按鈕整齊 */
         }
 
         .option-btn:hover:not([disabled]) {
@@ -127,7 +129,6 @@
             border-color: #c0392b !important;
         }
 
-        /* 回饋與提示 */
         .feedback, .hint-box {
             margin-top: 20px;
             padding: 15px;
@@ -155,7 +156,6 @@
             font-style: italic;
         }
 
-        /* 控制按鈕 */
         .controls {
             margin-top: 25px;
             display: flex;
@@ -187,7 +187,6 @@
         }
         .next-btn:hover { background-color: #b3983f; }
 
-        /* 進度條 */
         .progress-bar-container {
             position: absolute;
             top: 0;
@@ -203,7 +202,6 @@
             transition: width 0.4s ease;
         }
 
-        /* 結果頁面 */
         .results-container {
             text-align: center;
             display: none;
@@ -232,7 +230,6 @@
         }
         .restart-btn:hover { background-color: #004d33; }
         
-        /* 機密印章裝飾 */
         .top-secret-stamp {
             position: absolute;
             top: -20px;
@@ -257,7 +254,7 @@
             <div class="progress-bar" id="progress-bar"></div>
         </div>
         <div class="top-secret-stamp">TOP SECRET</div>
-        <h1>行動代號：生字特訓</h1>
+        <h1>行動代號：生字特訓 (進階版)</h1>
 
         <div id="quiz-content">
             <div class="question-section">
@@ -292,33 +289,38 @@
     <script>
         // --- JavaScript 邏輯控制 ---
 
-        // 1. 題庫資料 (已設定為您要求的檔名格式 1.jpg - 14.jpg)
-        // 註：為了配合單選題形式，部分題目選取了關鍵字作為選項。
+        // 1. 題庫資料 (已升級為 4 個選項，並包含正確答案解析)
         const quizData = [
             {
                 question: "1. 面對敵人嚴密的警備，洛伊德耐心等待著防守露出空（　）的瞬間。",
-                imageUrl: "1.jpg",
+                imageUrl: "1.png",
                 answerOptions: [
-                    { text: "隙", rationale: "「空隙」指中間空出的地方，引申為漏洞或機會。", isCorrect: true },
-                    { text: "細", rationale: "「空細」不是一個詞語。", isCorrect: false }
+                    { text: "隙", rationale: "「空隙」指中間空出的地方，引申為漏洞。", isCorrect: true },
+                    { text: "細", rationale: "「細」是微小的意思，如「細微」。", isCorrect: false },
+                    { text: "係", rationale: "「係」常於「關係」。", isCorrect: false },
+                    { text: "繫", rationale: "「繫」是綁住的意思，如「聯繫」。", isCorrect: false }
                 ],
                 hint: "指縫隙、漏洞，發音與「細」相同。"
             },
             {
                 question: "2. 「睡美人」潛入了犯罪集團的巢（　），嚇得壞人們像老鼠一樣四處逃（　）。",
-                imageUrl: "2.jpg",
+                imageUrl: "2.png",
                 answerOptions: [
-                    { text: "窟 / 竄", rationale: "「巢窟」指壞人聚居的地方；「逃竄」指倉皇逃跑。", isCorrect: true },
-                    { text: "窩 / 跑", rationale: "「巢窩」較口語；「逃跑」語氣不如「逃竄」強烈倉皇。", isCorrect: false }
+                    { text: "窟 / 竄", rationale: "「巢窟」指壞人聚居的洞穴；「逃竄」指倉皇逃跑。", isCorrect: true },
+                    { text: "窩 / 跑", rationale: "「窩」較口語；「跑」語氣不夠強烈。", isCorrect: false },
+                    { text: "穴 / 溜", rationale: "「溜」通常指偷偷離開，語氣較輕。", isCorrect: false },
+                    { text: "巢 / 避", rationale: "「避」是躲開，沒有亂跑的意思。", isCorrect: false }
                 ],
                 hint: "第一個字指洞穴，第二個字形容像老鼠一樣亂跑。"
             },
             {
                 question: "3. 管理官嚴肅地提醒「黃昏」，「行動代號：梟」的主要宗（　）在於維護東西兩國的和平。",
-                imageUrl: "3.jpg",
+                imageUrl: "3.jpg", // 假設您已經補上 3.jpg
                 answerOptions: [
                     { text: "旨", rationale: "「宗旨」指主要的意圖或目的。", isCorrect: true },
-                    { text: "指", rationale: "「宗指」不是一個詞語。", isCorrect: false }
+                    { text: "指", rationale: "「指」是用手指或點明的意思。", isCorrect: false },
+                    { text: "脂", rationale: "「脂」指油脂、脂肪。", isCorrect: false },
+                    { text: "止", rationale: "「止」是停住的意思。", isCorrect: false }
                 ],
                 hint: "意旨、目的。"
             },
@@ -327,7 +329,9 @@
                 imageUrl: "4.jpg",
                 answerOptions: [
                     { text: "狡猾", rationale: "形容人詭計多端，不可信任。", isCorrect: true },
-                    { text: "聰明", rationale: "「聰明」是中性詞，這裡需要貶義詞來形容敵人的詭計。", isCorrect: false }
+                    { text: "聰明", rationale: "「聰明」是中性或褒義詞，不適合形容敵人。", isCorrect: false },
+                    { text: "靈活", rationale: "「靈活」指敏捷不呆板，是正面詞語。", isCorrect: false },
+                    { text: "笨拙", rationale: "「笨拙」意思相反，指不聰明、不靈巧。", isCorrect: false }
                 ],
                 hint: "形容像狐狸一樣詭計多端。"
             },
@@ -335,8 +339,10 @@
                 question: "5. 在情報戰中，「黃昏」必須具備在極短時間內分（　）資訊真偽的能力。",
                 imageUrl: "5.jpg",
                 answerOptions: [
-                    { text: "辨", rationale: "「分辨」指區別、辨識。", isCorrect: true },
-                    { text: "辯", rationale: "「分辯」是用言語解釋、辯解的意思，不符語境。", isCorrect: false }
+                    { text: "辨", rationale: "「分辨」指區別、辨識，中間是一點一撇。", isCorrect: true },
+                    { text: "辯", rationale: "「辯」是用言語解釋、辯解，中間是「言」。", isCorrect: false },
+                    { text: "辦", rationale: "「辦」是處理事務，中間是「力」。", isCorrect: false },
+                    { text: "瓣", rationale: "「瓣」指花瓣或瓜果的分片，中間是「瓜」。", isCorrect: false }
                 ],
                 hint: "區別、判斷，中間是一點一撇。"
             },
@@ -344,8 +350,10 @@
                 question: "6. 為了保護家人，洛伊德即使在家中也保持高度警（　），隨時覺（　）環境中的細微異狀。",
                 imageUrl: "6.jpg",
                 answerOptions: [
-                    { text: "惕 / 察", rationale: "「警惕」指對可能發生的危險保持戒備；「覺察」指發覺、看出來。", isCorrect: true },
-                    { text: "剔 / 查", rationale: "「警剔」錯字；「覺查」錯字。", isCorrect: false }
+                    { text: "惕 / 察", rationale: "「警惕」指戒備；「覺察」指發覺。", isCorrect: true },
+                    { text: "剔 / 查", rationale: "「剔」是從骨頭上刮下肉；「查」是檢查。", isCorrect: false },
+                    { text: "踢 / 茶", rationale: "「踢」是腳部動作；「茶」是飲料。", isCorrect: false },
+                    { text: "提 / 差", rationale: "「提」是拿著；「差」是不同或不好。", isCorrect: false }
                 ],
                 hint: "第一個字是豎心旁，指戒備；第二個字指發覺。"
             },
@@ -354,7 +362,9 @@
                 imageUrl: "7.jpg",
                 answerOptions: [
                     { text: "蔽", rationale: "「掩蔽」指遮掩、擋住。", isCorrect: true },
-                    { text: "避", rationale: "「掩避」錯字，應為「躲避」。", isCorrect: false }
+                    { text: "避", rationale: "「躲避」是離開以免遇到，這裡需要遮擋物。", isCorrect: false },
+                    { text: "壁", rationale: "「牆壁」是建築物的一部分。", isCorrect: false },
+                    { text: "閉", rationale: "「關閉」是合上的意思。", isCorrect: false }
                 ],
                 hint: "遮擋、隱藏，草字頭。"
             },
@@ -362,8 +372,10 @@
                 question: "8. 結束了各自繁忙的「工作」，佛傑一家回到溫暖的公（　），享受（　）閒的晚餐時光。",
                 imageUrl: "8.jpg",
                 answerOptions: [
-                    { text: "寓 / 悠", rationale: "「公寓」指多層樓的住宅；「悠閒」指閒適自得。", isCorrect: true },
-                    { text: "宇 / 優", rationale: "「公宇」指公共建築；「優閒」雖通，但「悠閒」更常見。", isCorrect: false }
+                    { text: "寓 / 悠", rationale: "「公寓」指住所；「悠閒」指閒適自得。", isCorrect: true },
+                    { text: "宇 / 優", rationale: "「屋宇」指房子；「優閒」較少用。", isCorrect: false },
+                    { text: "遇 / 憂", rationale: "「相遇」；「憂愁」，意思完全不同。", isCorrect: false },
+                    { text: "愈 / 遊", rationale: "「痊癒」；「遊戲」，意思不同。", isCorrect: false }
                 ],
                 hint: "第一個字指住所；第二個字形容閒適的樣子。"
             },
@@ -371,8 +383,10 @@
                 question: "9. 雖然這個家庭是建立在欺（　）與（　）言之上，但他們之間的羈絆卻越來越真實。",
                 imageUrl: "9.jpg",
                 answerOptions: [
-                    { text: "騙 / 謊", rationale: "「欺騙」與「謊言」意思相近，都指不真實的話語或行為。", isCorrect: true },
-                    { text: "偏 / 荒", rationale: "「欺偏」錯字；「荒言」指荒唐的話，語氣不同。", isCorrect: false }
+                    { text: "騙 / 謊", rationale: "「欺騙」與「謊言」都指不真實的話語或行為。", isCorrect: true },
+                    { text: "偏 / 荒", rationale: "「偏心」；「荒唐」，意思不同。", isCorrect: false },
+                    { text: "篇 / 慌", rationale: "「篇章」；「慌張」，意思不同。", isCorrect: false },
+                    { text: "翩 / 皇", rationale: "「翩翩起舞」；「皇帝」，意思不同。", isCorrect: false }
                 ],
                 hint: "都與說假話有關。"
             },
@@ -381,7 +395,9 @@
                 imageUrl: "10.jpg",
                 answerOptions: [
                     { text: "偽", rationale: "「虛偽」指不真實、造假的。", isCorrect: true },
-                    { text: "為", rationale: "「虛為」不是一個詞語。", isCorrect: false }
+                    { text: "為", rationale: "「因為」或「行為」，意思不同。", isCorrect: false },
+                    { text: "位", rationale: "「位置」或「座位」。", isCorrect: false },
+                    { text: "味", rationale: "「味道」或「趣味」。", isCorrect: false }
                 ],
                 hint: "假的、不真實的，人字旁。"
             },
@@ -390,7 +406,9 @@
                 imageUrl: "11.jpg",
                 answerOptions: [
                     { text: "誇", rationale: "「浮誇」指虛浮不實，誇張過度。", isCorrect: true },
-                    { text: "跨", rationale: "「浮跨」不是一個詞語。", isCorrect: false }
+                    { text: "跨", rationale: "「跨越」的跨，足字旁。", isCorrect: false },
+                    { text: "垮", rationale: "「垮台」的垮，土字旁。", isCorrect: false },
+                    { text: "胯", rationale: "「胯下」的胯，肉字旁。", isCorrect: false }
                 ],
                 hint: "誇張、不切實際，言字旁。"
             },
@@ -398,8 +416,10 @@
                 question: "12. 達米安少爺為了掩飾害羞，總是故意用（　）刺的語氣和安妮亞說話。",
                 imageUrl: "12.jpg",
                 answerOptions: [
-                    { text: "諷", rationale: "「諷刺」指用含蓄或誇張的話來譏刺別人。", isCorrect: true },
-                    { text: "風", rationale: "「風刺」錯字。", isCorrect: false }
+                    { text: "諷", rationale: "「諷刺」指用含蓄的話譏刺別人。", isCorrect: true },
+                    { text: "風", rationale: "「風」是自然現象。", isCorrect: false },
+                    { text: "瘋", rationale: "「瘋狂」的瘋，病字旁。", isCorrect: false },
+                    { text: "封", rationale: "「信封」的封。", isCorrect: false }
                 ],
                 hint: "用言語譏刺別人，言字旁。"
             },
@@ -408,7 +428,9 @@
                 imageUrl: "13.jpg",
                 answerOptions: [
                     { text: "虛", rationale: "「虛弱」指身體衰弱，沒有力氣。", isCorrect: true },
-                    { text: "需", rationale: "「需弱」不是一個詞語。", isCorrect: false }
+                    { text: "需", rationale: "「需要」的需，雨字頭。", isCorrect: false },
+                    { text: "鬚", rationale: "「鬍鬚」的鬚，髟部。", isCorrect: false },
+                    { text: "噓", rationale: "「噓聲」的噓，口字旁。", isCorrect: false }
                 ],
                 hint: "身體衰弱無力。"
             },
@@ -416,8 +438,10 @@
                 question: "14. 洛伊德努力解釋「（　）蚌相爭」的成語故事，但安妮亞腦中只想著烤海鮮。",
                 imageUrl: "14.jpg",
                 answerOptions: [
-                    { text: "鷸", rationale: "「鷸蚌相爭」是成語，鷸是一種水鳥。", isCorrect: true },
-                    { text: " 鷂", rationale: "「鷂」是另一種猛禽，不符合此成語典故。", isCorrect: false }
+                    { text: "鷸", rationale: "「鷸」是一種長嘴水鳥。", isCorrect: true },
+                    { text: "鷂", rationale: "「鷂」是猛禽，體型較大。", isCorrect: false },
+                    { text: "鶴", rationale: "「鶴」是大型涉禽，如丹頂鶴。", isCorrect: false },
+                    { text: "鷗", rationale: "「海鷗」是常見的海鳥。", isCorrect: false }
                 ],
                 hint: "一種長嘴巴的水鳥，鳥字旁。"
             }
@@ -443,6 +467,16 @@
         const resultMessageEl = document.getElementById('result-message');
         const progressBarEl = document.getElementById('progress-bar');
 
+        // --- 新增功能：陣列洗牌函數 (Fisher-Yates Shuffle) ---
+        // 這會把選項隨機打亂
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         // 4. 初始化測驗
         function initQuiz() {
             currentQuestionIndex = 0;
@@ -462,11 +496,16 @@
             quizImageEl.src = currentQuizData.imageUrl;
             
             quizImageEl.onerror = function() {
-                this.alt = "⚠️ 影像資料遺失。請確認圖片檔案 (1.jpg - 14.jpg) 是否與網頁在同一目錄下。";
+                this.alt = "⚠️ 影像資料遺失。請確認 GitHub 上是否已上傳對應的圖片檔案 (1.png, 2.png, 3.jpg...等)。";
                 this.style.backgroundColor = "#f8d7da";
                 this.style.padding = "20px";
                 this.style.color = "#721c24";
                 this.style.fontWeight = "bold";
+                // 重置樣式以防是 placeholder
+                if (this.src.includes("placehold.co")) {
+                     this.style.backgroundColor = "transparent";
+                     this.style.padding = "0";
+                }
             };
 
             hintTextEl.innerText = currentQuizData.hint;
@@ -480,39 +519,53 @@
             const progressPercentage = ((currentQuestionIndex) / quizData.length) * 100;
             progressBarEl.style.width = `${progressPercentage}%`;
 
-            // 清空並重新產生選項按鈕
+            // 清空選項容器
             optionsContainerEl.innerHTML = '';
-            currentQuizData.answerOptions.forEach((option, index) => {
+
+            // --- 關鍵修改：複製選項陣列並進行隨機洗牌 ---
+            // 使用 [...] 來複製陣列，避免修改到原始題庫資料
+            const shuffledOptions = shuffleArray([...currentQuizData.answerOptions]);
+
+            // 產生隨機排列後的選項按鈕
+            shuffledOptions.forEach((option) => {
                 const button = document.createElement('button');
                 button.innerText = option.text;
                 button.classList.add('option-btn');
-                button.addEventListener('click', () => selectOption(index));
+                // 這裡需要傳遞整個 option 物件，以便判斷對錯
+                button.addEventListener('click', () => selectOption(button, option));
                 optionsContainerEl.appendChild(button);
             });
         }
 
-        // 6. 選擇答案處理
-        function selectOption(selectedIndex) {
+        // 6. 選擇答案處理 (已修改為適應隨機選項)
+        function selectOption(selectedButton, selectedOption) {
             if (isQuestionAnswered) return;
 
             isQuestionAnswered = true;
-            const currentQuizData = quizData[currentQuestionIndex];
-            const selectedOption = currentQuizData.answerOptions[selectedIndex];
             const optionButtons = optionsContainerEl.querySelectorAll('.option-btn');
 
+            // 禁用所有按鈕
             optionButtons.forEach(btn => btn.disabled = true);
             hintBtnEl.disabled = true;
             hintBoxEl.style.display = 'none';
 
             if (selectedOption.isCorrect) {
                 score++;
-                optionButtons[selectedIndex].classList.add('correct');
+                selectedButton.classList.add('correct');
                 feedbackEl.innerHTML = "<strong>✅ 任務成功！</strong> " + selectedOption.rationale;
                 feedbackEl.classList.add('correct');
             } else {
-                optionButtons[selectedIndex].classList.add('incorrect');
-                const correctIndex = currentQuizData.answerOptions.findIndex(opt => opt.isCorrect);
-                optionButtons[correctIndex].classList.add('correct');
+                selectedButton.classList.add('incorrect');
+                
+                // 找出正確答案的按鈕並標示
+                optionButtons.forEach(btn => {
+                    // 透過比較按鈕文字來找到正確選項 (因為順序亂了)
+                    const currentQuizData = quizData[currentQuestionIndex];
+                    const correctOpt = currentQuizData.answerOptions.find(opt => opt.isCorrect);
+                    if (btn.innerText === correctOpt.text) {
+                        btn.classList.add('correct');
+                    }
+                });
                 
                 feedbackEl.innerHTML = "<strong>❌ 任務失敗。</strong> " + selectedOption.rationale;
                 feedbackEl.classList.add('incorrect');
